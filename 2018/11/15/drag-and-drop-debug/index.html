@@ -56,21 +56,21 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/zzzze-blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+<link href="/zzzze-blog/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/zzzze-blog/images/apple-touch-icon-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/zzzze-blog/images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/zzzze-blog/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/zzzze-blog/images/logo.svg?v=6.4.2" color="#222">
 
 
 
@@ -83,7 +83,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/',
+    root: '/zzzze-blog/',
     scheme: 'Mist',
     version: '6.4.2',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
@@ -192,7 +192,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/zzzze-blog/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Z's Blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -221,7 +221,7 @@
         
           
           <li class="menu-item menu-item-home">
-    <a href="/" rel="section">
+    <a href="/zzzze-blog/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
   </li>
         
@@ -229,7 +229,7 @@
         
           
           <li class="menu-item menu-item-archives">
-    <a href="/archives/" rel="section">
+    <a href="/zzzze-blog/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
   </li>
 
@@ -281,12 +281,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.zerooo.io/2018/11/15/drag-and-drop-debug/">
+    <link itemprop="mainEntityOfPage" href="https://blog.zerooo.io/zzzze-blog/2018/11/15/drag-and-drop-debug/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zzzze">
       <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/zzzze-blog/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -354,8 +354,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/15/drag-and-drop-debug/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/15/drag-and-drop-debug/" itemprop="commentCount"></span>
+                <a href="/zzzze-blog/2018/11/15/drag-and-drop-debug/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/zzzze-blog/2018/11/15/drag-and-drop-debug/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -386,7 +386,7 @@
         <h3 id="bug-表现"><a href="#bug-表现" class="headerlink" title="bug 表现"></a>bug 表现</h3><p>当页面中的某个区域使用了 react-dnd，并且使用了 html5 backend 后，在页面的其他区域的 element 中定义的 ondrop 事件会无法触发。把 react-dnd 的相关代码注释掉后，ondrop 事件会正常触发。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">... <span class="comment">// 页面的其他使用了 react-dnd、react-dnd-html5-backend</span></span><br><span class="line">&lt;div onDragOver=&#123; e =&gt; &#123;e.preventDefault()&#125;&#125;</span><br><span class="line">  onDrop=&#123;e =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'onDrop'</span>)  <span class="comment">// 无法被触发</span></span><br><span class="line">  &#125;&#125;&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
 <h3 id="debug-过程"><a href="#debug-过程" class="headerlink" title="debug 过程"></a>debug 过程</h3><p>很明显是 react-dnd 影响了 ondrop 事件。由于事件绑定的工作是 react-dnd-html5-backend 来做的，所以从它入手找问题所在。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react-dnd-html5-backend/lib/HTML5Backend.js</span></span><br><span class="line">...</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(HTML5Backend.prototype, <span class="string">"window"</span>, &#123;</span><br><span class="line">        <span class="comment">// public for test</span></span><br><span class="line">        get: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.context &amp;&amp; <span class="keyword">this</span>.context.window) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.context.window;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">window</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">window</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">        enumerable: <span class="literal">true</span>,</span><br><span class="line">        configurable: <span class="literal">true</span></span><br><span class="line">    &#125;);</span><br><span class="line">    HTML5Backend.prototype.setup = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.window === <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.window.__isReactDndBackendSetUp) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Cannot have two HTML5 backends at the same time.'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.window.__isReactDndBackendSetUp = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">this</span>.addEventListeners(<span class="keyword">this</span>.window);</span><br><span class="line">    &#125;;</span><br><span class="line">...</span><br><span class="line">    HTML5Backend.prototype.addEventListeners = <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// SSR Fix (https://github.com/react-dnd/react-dnd/pull/813</span></span><br><span class="line">        <span class="keyword">if</span> (!target.addEventListener) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        target.addEventListener(<span class="string">'dragstart'</span>, <span class="keyword">this</span>.handleTopDragStart);</span><br><span class="line">        target.addEventListener(<span class="string">'dragstart'</span>, <span class="keyword">this</span>.handleTopDragStartCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragend'</span>, <span class="keyword">this</span>.handleTopDragEndCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragenter'</span>, <span class="keyword">this</span>.handleTopDragEnter);</span><br><span class="line">        target.addEventListener(<span class="string">'dragenter'</span>, <span class="keyword">this</span>.handleTopDragEnterCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragleave'</span>, <span class="keyword">this</span>.handleTopDragLeaveCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragover'</span>, <span class="keyword">this</span>.handleTopDragOver);</span><br><span class="line">        target.addEventListener(<span class="string">'dragover'</span>, <span class="keyword">this</span>.handleTopDragOverCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'drop'</span>, <span class="keyword">this</span>.handleTopDrop);</span><br><span class="line">        target.addEventListener(<span class="string">'drop'</span>, <span class="keyword">this</span>.handleTopDropCapture, <span class="literal">true</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react-dnd-html5-backend/lib/HTML5Backend.js</span></span><br><span class="line">...</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(HTML5Backend.prototype, <span class="string">"window"</span>, &#123;</span><br><span class="line">        <span class="comment">// public for test</span></span><br><span class="line">        <span class="keyword">get</span>: function () &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.context &amp;&amp; <span class="keyword">this</span>.context.window) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.context.window;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">window</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">window</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">        enumerable: <span class="literal">true</span>,</span><br><span class="line">        configurable: <span class="literal">true</span></span><br><span class="line">    &#125;);</span><br><span class="line">    HTML5Backend.prototype.setup = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.window === <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.window.__isReactDndBackendSetUp) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Cannot have two HTML5 backends at the same time.'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.window.__isReactDndBackendSetUp = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">this</span>.addEventListeners(<span class="keyword">this</span>.window);</span><br><span class="line">    &#125;;</span><br><span class="line">...</span><br><span class="line">    HTML5Backend.prototype.addEventListeners = <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// SSR Fix (https://github.com/react-dnd/react-dnd/pull/813</span></span><br><span class="line">        <span class="keyword">if</span> (!target.addEventListener) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        target.addEventListener(<span class="string">'dragstart'</span>, <span class="keyword">this</span>.handleTopDragStart);</span><br><span class="line">        target.addEventListener(<span class="string">'dragstart'</span>, <span class="keyword">this</span>.handleTopDragStartCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragend'</span>, <span class="keyword">this</span>.handleTopDragEndCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragenter'</span>, <span class="keyword">this</span>.handleTopDragEnter);</span><br><span class="line">        target.addEventListener(<span class="string">'dragenter'</span>, <span class="keyword">this</span>.handleTopDragEnterCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragleave'</span>, <span class="keyword">this</span>.handleTopDragLeaveCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'dragover'</span>, <span class="keyword">this</span>.handleTopDragOver);</span><br><span class="line">        target.addEventListener(<span class="string">'dragover'</span>, <span class="keyword">this</span>.handleTopDragOverCapture, <span class="literal">true</span>);</span><br><span class="line">        target.addEventListener(<span class="string">'drop'</span>, <span class="keyword">this</span>.handleTopDrop);</span><br><span class="line">        target.addEventListener(<span class="string">'drop'</span>, <span class="keyword">this</span>.handleTopDropCapture, <span class="literal">true</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>上面的代码表面，react-dnd-html5-backend 把所有相关的事件的绑定到了 window 上了。那就有可能是事件冒泡到 window 上后，被相关的事件回调影响了。<br>再看看它在 dragover 事件回调中做了什么:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react-dnd-html5-backend/lib/HTML5Backend.js</span></span><br><span class="line">...</span><br><span class="line">    HTML5Backend.prototype.handleTopDragOver = <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (canDrop) &#123;</span><br><span class="line">            <span class="comment">// Show user-specified drop effect.</span></span><br><span class="line">            e.preventDefault();</span><br><span class="line">            e.dataTransfer.dropEffect = <span class="keyword">this</span>.getCurrentDropEffect();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.isDraggingNativeItem()) &#123;</span><br><span class="line">            <span class="comment">// Don't show a nice cursor but still prevent default</span></span><br><span class="line">            <span class="comment">// "drop and blow away the whole document" action.</span></span><br><span class="line">            e.preventDefault();</span><br><span class="line">            e.dataTransfer.dropEffect = <span class="string">'none'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p><code>canDrop</code> 这个变量是在 react-dnd 中维护的，也有接口提供给用户去操作。但前提是，必须在 react-dnd 使用过程中操作。<br><code>e.dataTransfer.dropEffect = &#39;none&#39;;</code> 这句代码，把 drop 动作给取消了！也就是说，在使用了 react-dnd 后，其他 drop 事件冒泡到 window 被 react-dnd-html5-backend 捕获后，都被干掉了。<br>注释掉了这句，果然就正常了。</p>
@@ -414,11 +414,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/react/" rel="tag"># react</a>
+            <a href="/zzzze-blog/tags/react/" rel="tag"># react</a>
           
-            <a href="/tags/debug/" rel="tag"># debug</a>
+            <a href="/zzzze-blog/tags/debug/" rel="tag"># debug</a>
           
-            <a href="/tags/react-dnd/" rel="tag"># react-dnd</a>
+            <a href="/zzzze-blog/tags/react-dnd/" rel="tag"># react-dnd</a>
           
         </div>
       
@@ -431,7 +431,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/15/hello-world/" rel="next" title="Hello World">
+              <a href="/zzzze-blog/2018/11/15/hello-world/" rel="next" title="Hello World">
                 <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
@@ -510,7 +510,7 @@
               
                 <div class="site-state-item site-state-posts">
                 
-                  <a href="/archives/">
+                  <a href="/zzzze-blog/archives/">
                 
                     <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
@@ -680,42 +680,42 @@
 
   
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/zzzze-blog/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/zzzze-blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/zzzze-blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+  <script type="text/javascript" src="/zzzze-blog/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/zzzze-blog/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/zzzze-blog/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/zzzze-blog/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/zzzze-blog/js/src/bootstrap.js?v=6.4.2"></script>
 
 
 
