@@ -110,7 +110,7 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="Z&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2018/09/index.html">
+<meta property="og:url" content="https://blog.zerooo.io/tags/antd/index.html">
 <meta property="og:site_name" content="Z&#39;s Blog">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/09/"/>
+  <link rel="canonical" href="https://blog.zerooo.io/tags/antd/"/>
 
 
 
@@ -131,7 +131,7 @@
   };
 </script>
 
-  <title>归档 | Z's Blog</title>
+  <title>标签: antd | Z's Blog</title>
   
 
 
@@ -178,7 +178,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -223,7 +223,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
@@ -276,35 +276,15 @@
   
   
   
-  <div class="post-block archive">
+  <div class="post-block tag">
+
     <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+      <div class="collection-title">
+        <h1>antd<small>标签</small>
+        </h1>
+      </div>
 
       
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 1 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
         
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -312,9 +292,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2018/09/30/hello-world/" itemprop="url">
+            <a class="post-title-link" href="/2018/11/08/antd-message-debug/" itemprop="url">
               
-                <span itemprop="name">Hello World</span>
+                <span itemprop="name">antd message 引起的血案</span>
               
             </a>
         
@@ -322,9 +302,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-30T18:08:21+08:00"
-              content="2018-09-30" >
-          09-30
+              datetime="2018-11-08T11:29:01+08:00"
+              content="2018-11-08" >
+          11-08
         </time>
       </div>
 
@@ -332,17 +312,15 @@
   </article>
 
 
-
       
-
     </div>
+
   </div>
   
   
   
 
   
-
 
 
           </div>
@@ -383,7 +361,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -391,6 +369,31 @@
 
               
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
               
             </nav>
           
@@ -427,7 +430,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -557,6 +560,31 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'faf4UcmjALHmy1w3nzADRebW-gzGzoHsz',
+        appKey: 'fbkYpbImSw6Om7t2jtrvL5XL',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
 
 
 
