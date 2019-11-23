@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/zzzze-blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/zzzze-blog/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/zzzze-blog/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/zzzze-blog/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/zzzze-blog/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/zzzze-blog/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/zzzze-blog/',
+    scheme: 'Mist',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这是个由第三方包引起的“血案”。这里记录一下，让大家有所了解，避免这个问题。 事故现场还原某次代码上线后，发现了很多莫名的报错，并且很多链接无法跳转。现场调试发现有个方法返回的 message 变量，很神奇变成了 antd 的 message。当时的处理方法是，直接把那个方法里的 message 变量，改为 messageEle。 出事故的代码1234567891011121314151617..">
+<meta name="keywords" content="object-Object">
+<meta property="og:type" content="article">
+<meta property="og:title" content="antd message 引起的血案">
+<meta property="og:url" content="https://zzzze.github.io/zzzze-blog/2019/05/25/antd-message-debug/index.html">
+<meta property="og:site_name" content="Z&#39;s Blog">
+<meta property="og:description" content="这是个由第三方包引起的“血案”。这里记录一下，让大家有所了解，避免这个问题。 事故现场还原某次代码上线后，发现了很多莫名的报错，并且很多链接无法跳转。现场调试发现有个方法返回的 message 变量，很神奇变成了 antd 的 message。当时的处理方法是，直接把那个方法里的 message 变量，改为 messageEle。 出事故的代码1234567891011121314151617..">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-16T07:21:55.746Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="antd message 引起的血案">
+<meta name="twitter:description" content="这是个由第三方包引起的“血案”。这里记录一下，让大家有所了解，避免这个问题。 事故现场还原某次代码上线后，发现了很多莫名的报错，并且很多链接无法跳转。现场调试发现有个方法返回的 message 变量，很神奇变成了 antd 的 message。当时的处理方法是，直接把那个方法里的 message 变量，改为 messageEle。 出事故的代码1234567891011121314151617..">
+
+
+
+
+
+
+  <link rel="canonical" href="https://zzzze.github.io/zzzze-blog/2019/05/25/antd-message-debug/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>antd message 引起的血案 | Z's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/zzzze-blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/zzzze-blog/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/zzzze-blog/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zzzze.github.io/zzzze-blog/zzzze-blog/2019/05/25/antd-message-debug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zzzze">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/zzzze-blog/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">antd message 引起的血案
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-25 22:14:24" itemprop="dateCreated datePublished" datetime="2019-05-25T22:14:24+08:00">2019-05-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-16 15:21:55" itemprop="dateModified" datetime="2019-11-16T15:21:55+08:00">2019-11-16</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/zzzze-blog/categories/object-Object/" itemprop="url" rel="index"><span itemprop="name">object-Object</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/zzzze-blog/2019/05/25/antd-message-debug/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/zzzze-blog/2019/05/25/antd-message-debug/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是个由第三方包引起的“血案”。这里记录一下，让大家有所了解，避免这个问题。</p>
+<h3 id="事故现场还原"><a href="#事故现场还原" class="headerlink" title="事故现场还原"></a>事故现场还原</h3><p>某次代码上线后，发现了很多莫名的报错，并且很多链接无法跳转。<br>现场调试发现有个方法返回的 message 变量，很神奇变成了 antd 的 message。<br>当时的处理方法是，直接把那个方法里的 message 变量，改为 messageEle。</p>
+<h3 id="出事故的代码"><a href="#出事故的代码" class="headerlink" title="出事故的代码"></a>出事故的代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> &#123;message&#125; <span class="keyword">from</span> <span class="string">'antd'</span></span><br><span class="line">...</span><br><span class="line">getMessageWithCallback(message) &#123;</span><br><span class="line">  <span class="keyword">if</span> (React.isValidElement(message)) &#123;</span><br><span class="line">     <span class="keyword">return</span> React.cloneElement(message, &#123;<span class="attr">authMinapp</span>: <span class="keyword">this</span>.authMinapp&#125;)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     <span class="keyword">return</span> message</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">...</span><br><span class="line"><span class="comment">// 后面在某个地方到用了上面这个方法</span></span><br><span class="line"><span class="keyword">this</span>.setState(&#123;</span><br><span class="line">  message: <span class="keyword">this</span>.getMessageWithCallback(data.message)</span><br><span class="line">&#125;)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="debug-过程记录"><a href="#debug-过程记录" class="headerlink" title="debug 过程记录"></a>debug 过程记录</h3><p>通过避免使用跟 antd message 一样的变量名，这个 bug 被暂时修复了。<br>但是，我还是想看一下是谁干的好事。我都差点怀疑自己是否记错语法了。<br>于是，周末闲来无事，我准备好环境，代码切换到出事故的那个 commit，开始 debug。<br>跑起来后，果然问题重现了。点击菜单就报错，页面也无法切换。<br>上面那段代码运行后，在 render 方法里，this.state.message 会变成 antd 的 message 对象。<br>让人头大的地方在于，在大部分地方打断点，得到的值是对的！一开始，我怀疑是我在某个隐蔽的地方 setState 了，导致 message 变了。<br>结果一查，发现不是。接着我又怀疑是 React.CloneElement 的问题、class 的问题，但都查不出结果。<br>唯一能确认的是，这件事情，貌似跟 antd 脱不了干系。因为只有跟 antd 组件同名的变量才会莫名其妙的变了。<br>于是我重新搭了个精简的项目，继续 debug。<br>代码只有几句:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;message&#125; <span class="keyword">from</span> <span class="string">'antd'</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMessage</span> (<span class="params">message</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(message)  <span class="comment">// =&gt; 'test'</span></span><br><span class="line">  <span class="keyword">return</span> message</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(getMessage(<span class="string">'test'</span>))  <span class="comment">// =&gt; &#123;...&#125;</span></span><br></pre></td></tr></table></figure>
+<p>最后的 console 又变了。这个 getMessage 里的 return 有鬼。<br>我们来看看编译后的代码吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">"use strict"</span>;</span><br><span class="line">__webpack_require__.r(__webpack_exports__);</span><br><span class="line"><span class="comment">/* harmony import */</span> <span class="keyword">var</span> antd_lib_message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(<span class="comment">/*! moduleTest/lib/message */</span> <span class="string">"./src/moduleTest/lib/message.js"</span>);</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMessage</span>(<span class="params">message</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> antd_lib_message__WEBPACK_IMPORTED_MODULE_0__;  <span class="comment">// !!!</span></span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这个 <code>return</code> 确实有问题。<br>这个可以肯定不是语法更代码逻辑的问题了。应该是编译工具有毛病。<br>这时我想起了 <code>antd</code> 使用了 <code>babel-plugin-import</code> 来实现按需加载，并且目前项目只在 prod 环境下有使用这个插件。<br>正好 bug 也是在 prod 环境下出现的。<br>我立马把 import 语句改为 import message from ‘antd/lib/message’，并且在 webpack.config.js 中将以下配置注释掉。<br>（其实不注释也可以的，只要不是 from ‘antd’，插件就不会起作用）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">use: [&#123;</span><br><span class="line">  loader:<span class="string">'babel-loader'</span>,</span><br><span class="line">    options: &#123;</span><br><span class="line">      plugins: [</span><br><span class="line">        <span class="comment">//['import', &#123;</span></span><br><span class="line">        <span class="comment">//  'libraryName': 'antd',</span></span><br><span class="line">        <span class="comment">//  'libraryDirectory': 'lib'</span></span><br><span class="line">        <span class="comment">//&#125;],</span></span><br><span class="line">      ]</span><br><span class="line">   &#125;</span><br><span class="line">&#125;]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>果然，一切正常了。bug 确实出现在 babel-plugin-import。<br>好奇心让我打开 github 看一下 <a href="https://github.com/ant-design/babel-plugin-import" target="_blank" rel="noopener">babel-plugin-import</a> 的源码。<br>嗯，果然。。。没看懂。<br>也没找到有用的注释，那找份文档先研究一下吧。<br>兜兜转转，终于找到了 <a href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md" target="_blank" rel="noopener">babel plugin handbook</a> （有中文版）。</p>
+<p>。。。。。。</p>
+<p>临时抱佛脚，还是有点效果的。我在 <a href="https://github.com/ant-design/babel-plugin-import/blob/master/src/Plugin.js" target="_blank" rel="noopener">Plugin.js </a>里发现了一段代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">ReturnStatement(path, state) &#123;</span><br><span class="line">  <span class="keyword">const</span> types = <span class="keyword">this</span>.types;</span><br><span class="line">  <span class="keyword">const</span> file = (path &amp;&amp; path.hub &amp;&amp; path.hub.file) || (state &amp;&amp; state.file);</span><br><span class="line">  <span class="keyword">const</span> &#123; node &#125; = path;</span><br><span class="line">  <span class="keyword">if</span> (node.argument &amp;&amp; types.isIdentifier(node.argument) &amp;&amp; <span class="keyword">this</span>.specified[node.argument.name]) &#123;</span><br><span class="line">    node.argument = <span class="keyword">this</span>.importMethod(node.argument.name, file);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>就是这段代码，替换掉 return 语句中的变量的。<br>这是一个钩子，当编译程序读到 return 语句时，就会进入这个钩子。node.argument 就是 return 语句中的变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.argument = <span class="keyword">this</span>.importMethod(node.argument.name, file) <span class="comment">// 这句代码就把变量给换了！！！</span></span><br></pre></td></tr></table></figure>
+<p>本来到这里我想提交个 bug 就算了，没想要搞清楚里面的逻辑。<br>但是，好奇心让我打开了这段代码的单元测试。<br>嗯。很简洁。简直就是为我准备的，怕我看不懂。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// actual.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; toast &#125; <span class="keyword">from</span> <span class="string">'antd'</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// expected.js</span></span><br><span class="line"><span class="meta">"use strict"</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> _toast2 = _interopRequireDefault(<span class="built_in">require</span>(<span class="string">"antd/lib/toast"</span>));</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_interopRequireDefault</span>(<span class="params">obj</span>) </span>&#123; <span class="keyword">return</span> obj &amp;&amp; obj.__esModule ? obj : &#123; <span class="attr">default</span>: obj &#125;; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> _toast2.default;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到这里，相信大家已经看到问题所在了。<br>作者只写了一个单元测试，就是确保把 return 语句中与 import 进来的字段一致的变量替换掉。根本没考虑过其他情况。</p>
+<p>。。。。。。</p>
+<p>下面是我的修复（一个粗略的修复，没有覆盖所有的情况）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="comment">// 判断变量是否在全局作用域中定义</span></span><br><span class="line">isInGlobalScope(path, name) &#123;</span><br><span class="line">  <span class="keyword">const</span> parentPath = path.findParent(<span class="function">(<span class="params">_path</span>) =&gt;</span></span><br><span class="line">  _path.scope.hasOwnBinding(<span class="keyword">this</span>.specified[name]));</span><br><span class="line">  <span class="keyword">return</span> !!parentPath &amp;&amp; parentPath.isProgram();</span><br><span class="line">&#125;</span><br><span class="line">ReturnStatement(path, state) &#123;</span><br><span class="line">  <span class="keyword">const</span> types = <span class="keyword">this</span>.types;</span><br><span class="line">  <span class="keyword">const</span> file = (path &amp;&amp; path.hub &amp;&amp; path.hub.file) || (state &amp;&amp; state.file);</span><br><span class="line">  <span class="keyword">const</span> &#123; node &#125; = path;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (node.argument &amp;&amp; types.isIdentifier(node.argument) &amp;&amp; <span class="keyword">this</span>.specified[node.argument.name] &amp;&amp;</span><br><span class="line">    <span class="keyword">this</span>.isInGlobalScope(path, node.argument.name)) &#123;</span><br><span class="line">    node.argument = <span class="keyword">this</span>.importMethod(node.argument.name, file);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并添加了几个单元测试：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; toast &#125; <span class="keyword">from</span> <span class="string">'antd'</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params">toast</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">c</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> toast = <span class="string">'toast'</span></span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">d</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> toast = <span class="string">'toast'</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> toast</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是编译后的结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">"use strict"</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> _toast2 = _interopRequireDefault(<span class="built_in">require</span>(<span class="string">"antd/lib/toast"</span>));</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_interopRequireDefault</span>(<span class="params">obj</span>) </span>&#123; <span class="keyword">return</span> obj &amp;&amp; obj.__esModule ? obj : &#123; <span class="attr">default</span>: obj &#125;; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> _toast2.default;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params">toast</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">c</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> toast = <span class="string">'toast'</span>;</span><br><span class="line">  <span class="keyword">return</span> toast;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">d</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> toast = <span class="string">'toast'</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> toast;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单来说，就是改为：只替换在全局作用域定义，并且跟使用 babel-plugin-import import 进来的变量名一致的变量。<br>另外，建议始终开启 <code>ESLint</code> 的 <code>no-shadow</code> 规则。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/zzzze-blog/tags/object-Object/" rel="tag"># object-Object</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/zzzze-blog/2019/05/25/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/zzzze-blog/2019/05/25/image-crawler/" rel="prev" title="知晓云云函数图片爬虫开发">
+                知晓云云函数图片爬虫开发 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zzzze</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/zzzze-blog/archives/">
+                
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#事故现场还原"><span class="nav-number">1.</span> <span class="nav-text">事故现场还原</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#出事故的代码"><span class="nav-number">2.</span> <span class="nav-text">出事故的代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-过程记录"><span class="nav-number">3.</span> <span class="nav-text">debug 过程记录</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zzzze</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/zzzze-blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/zzzze-blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/zzzze-blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/zzzze-blog/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/zzzze-blog/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/zzzze-blog/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/zzzze-blog/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/zzzze-blog/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/zzzze-blog/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'faf4UcmjALHmy1w3nzADRebW-gzGzoHsz',
+    appKey: 'fbkYpbImSw6Om7t2jtrvL5XL',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
